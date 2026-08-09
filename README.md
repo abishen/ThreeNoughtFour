@@ -1,21 +1,80 @@
 # 304 Console Card Game
 
-A playable C# console version of the four-player 304 card game. You partner with Maya against three computer-controlled players: Nimal and Ravi are the opposing team.
+A playable C# console implementation of the four-player 304 card game. You play with Maya as your partner against the computer-controlled Nimal and Ravi. The application includes bidding, hidden trump selection, legal-card validation, eight-trick rounds, bot decisions, contract scoring, automated simulations, and unit tests.
 
-## Run
+## Prerequisites
+
+The application targets **.NET 10**. Install the .NET 10 SDK, which includes everything required to restore, build, run, and test the project.
+
+### macOS
+
+Install with [Homebrew](https://brew.sh/):
 
 ```sh
-dotnet run
+brew install --cask dotnet-sdk
+```
+
+Alternatively, download the macOS SDK from the [.NET 10 download page](https://dotnet.microsoft.com/download/dotnet/10.0).
+
+### Windows
+
+Install with Windows Package Manager:
+
+```powershell
+winget install Microsoft.DotNet.SDK.10
+```
+
+Alternatively, download the Windows installer from the [.NET 10 download page](https://dotnet.microsoft.com/download/dotnet/10.0).
+
+### Linux
+
+Follow the [.NET installation guide for your Linux distribution](https://learn.microsoft.com/dotnet/core/install/linux) and install the .NET 10 SDK package.
+
+Verify the installation:
+
+```sh
+dotnet --version
+```
+
+The reported version should begin with `10.`.
+
+## Run the Application
+
+Open a terminal in the repository root, the directory containing `threenoughtfour` and `threenoughtfour.tests`.
+
+Restore dependencies and build the application:
+
+```sh
+dotnet restore threenoughtfour/ThreeZeroFour.csproj
+dotnet build threenoughtfour/ThreeZeroFour.csproj
+```
+
+Start an interactive game:
+
+```sh
+dotnet run --project threenoughtfour/ThreeZeroFour.csproj
 ```
 
 Enter `p` or `pass` during the auction, or enter a legal bid. Choose trump with `C`, `D`, `H`, or `S`, then play cards by entering their displayed number.
 
-Useful validation commands:
+## Validation and Tests
+
+Run an automated game with four computer-controlled players:
 
 ```sh
-dotnet run -- --self-test
-dotnet run -- --simulate
-dotnet test ../threenoughtfour.tests/ThreeZeroFour.Tests.csproj
+dotnet run --project threenoughtfour/ThreeZeroFour.csproj -- --simulate
+```
+
+Run the built-in rules checks:
+
+```sh
+dotnet run --project threenoughtfour/ThreeZeroFour.csproj -- --self-test
+```
+
+Run the xUnit test suite:
+
+```sh
+dotnet test threenoughtfour.tests/ThreeZeroFour.Tests.csproj
 ```
 
 Unit tests use the `Method_WhenCondition_ExpectedResult` naming convention so failures describe the behavior under test without opening the test body.
