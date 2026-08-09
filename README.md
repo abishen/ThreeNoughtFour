@@ -15,7 +15,24 @@ Useful validation commands:
 ```sh
 dotnet run -- --self-test
 dotnet run -- --simulate
+dotnet test ../threenoughtfour.tests/ThreeZeroFour.Tests.csproj
 ```
+
+Unit tests use the `Method_WhenCondition_ExpectedResult` naming convention so failures describe the behavior under test without opening the test body.
+
+## Architecture
+
+`Program.cs` is the composition root. It creates the service implementations and supplies their dependencies through constructors.
+
+- `GameService` coordinates rounds without implementing deck, auction, player, or trick policies.
+- `DeckService` owns deck creation, shuffling, dealing, and hand sorting.
+- `AuctionService` coordinates bidding through the player decision abstraction.
+- `TrickService` coordinates legal plays, trick winners, and team points.
+- `GameRulesService` contains deterministic game and bidding rules.
+- `PlayerDecisionService` contains human input and bot decision policies.
+- `IGameConsole` isolates console I/O so another interface can replace it.
+
+Each service implements a focused interface under `Services/`, keeping high-level game flow dependent on abstractions rather than concrete implementations.
 
 ## Implemented Variant
 
@@ -29,4 +46,4 @@ dotnet run -- --simulate
 - Players must follow the lead suit when possible. Trump is revealed automatically when a player first cannot follow suit, and it applies from that trick onward.
 - The bidder's team must collect at least its bid from the eight tricks to make the contract.
 
-Regional 304 rules differ, especially around bidding rounds, trump reveal, and penalties. This project states its variant explicitly so those rules can be adjusted in `Game.cs` and `GameRules.cs`.
+Regional 304 rules differ, especially around bidding rounds, trump reveal, and penalties. This project states its variant explicitly so those policies can be adjusted in `Services/GameRulesService.cs` and `Services/AuctionService.cs`.

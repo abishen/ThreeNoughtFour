@@ -1,8 +1,8 @@
-namespace ThreeZeroFour;
+namespace ThreeZeroFour.Services;
 
-static class GameRules
+sealed class GameRulesService : IGameRulesService
 {
-    public static List<Card> LegalCards(IReadOnlyCollection<Card> hand, Suit? leadSuit)
+    public IReadOnlyList<Card> GetLegalCards(IReadOnlyCollection<Card> hand, Suit? leadSuit)
     {
         if (leadSuit is null)
         {
@@ -13,7 +13,7 @@ static class GameRules
         return followingSuit.Count > 0 ? followingSuit : [.. hand];
     }
 
-    public static int WinningPlayIndex(
+    public int FindWinningCardIndex(
         IReadOnlyList<Card> playedCards,
         Suit leadSuit,
         Suit trumpSuit,
@@ -30,6 +30,11 @@ static class GameRules
 
         return winningIndex;
     }
+
+    public bool IsValidBid(int bid, int highestBid) =>
+        bid > highestBid && ((bid >= 160 && bid <= 300 && bid % 10 == 0) || bid == 304);
+
+    public int GetNextBid(int highestBid) => Math.Max(160, highestBid + 10);
 
     private static bool Beats(Card challenger, Card current, Suit leadSuit, Suit trumpSuit, bool trumpRevealed)
     {
