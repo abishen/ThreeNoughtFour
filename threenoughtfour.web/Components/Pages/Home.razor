@@ -1,0 +1,114 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@inject GameSession Game
+
+<PageTitle>Three Nought Four</PageTitle>
+
+<main class="game-shell">
+	<header class="topbar">
+		<div class="brand">
+			<span class="brand-mark">304</span>
+			<div><h1>Three Nought Four</h1><p>Partnership card game</p></div>
+		</div>
+		<button class="new-round" @onclick="Game.StartNewRound" title="Start a new round">New round</button>
+	</header>
+
+	<section class="score-rail" aria-label="Round information">
+		<div class="score-team ours"><span>You + Maya</span><strong>@Game.TeamPoints[0]</strong></div>
+		<dl class="round-meta">
+			<div><dt>Contract</dt><dd>@Game.GetContractText()</dd></div>
+			<div><dt>Trump</dt><dd>@Game.GetTrumpText()</dd></div>
+			<div><dt>Trick</dt><dd>@Game.TrickNumber / 8</dd></div>
+		</dl>
+		<div class="score-team theirs"><span>Banda + Ruban</span><strong>@Game.TeamPoints[1]</strong></div>
+	</section>
+
+	<section class="table" aria-label="Card table">
+		<img class="table-emblem" src="images/table-emblem.svg" alt="" />
+		<div class="player player-top"><span class="avatar">M</span><div><strong>Maya</strong><small>Your partner</small></div><span class="card-count">@Game.Players[2].Hand.Count</span></div>
+		<div class="player player-left"><span class="avatar">B</span><div><strong>Banda</strong><small>Opponent</small></div><span class="card-count">@Game.Players[1].Hand.Count</span></div>
+		<div class="player player-right"><span class="avatar">R</span><div><strong>Ruban</strong><small>Opponent</small></div><span class="card-count">@Game.Players[3].Hand.Count</span></div>
+
+		<div class="trick-area" aria-label="Cards in current trick">
+			@if (Game.CurrentTrick.Count == 0)
+			{
+				<div class="empty-trick"><span>@Game.TrickNumber</span><small>TRICK</small></div>
+			}
+			else
+			{
+				@foreach (var play in Game.CurrentTrick)
+				{
+					<article class="played-card @SuitColor(play.Card)"><small>@play.Player.Name</small><strong>@RankLabel(play.Card)</strong><span>@SuitSymbol(play.Card.Suit)</span></article>
+				}
+			}
+		</div>
+		<div class="status" role="status">@Game.StatusMessage</div>
+	</section>
+
+	<section class="action-dock">
+		@if (Game.Phase == GamePhase.Bidding)
+		{
+			<div class="decision-panel">
+				<div class="decision-heading"><span>YOUR BID</span><strong>Set the contract</strong></div>
+				<div class="bid-options">
+					<button class="pass-button" @onclick="() => Game.SubmitHumanBid(null)">Pass</button>
+					@foreach (var bid in Game.BidOptions)
+					{
+						<button @onclick="() => Game.SubmitHumanBid(bid)">@bid</button>
+					}
+				</div>
+			</div>
+		}
+		else if (Game.Phase == GamePhase.ChoosingTrump)
+		{
+			<div class="decision-panel trump-panel">
+				<div class="decision-heading"><span>YOUR TRUMP</span><strong>Choose a suit</strong></div>
+				<div class="suit-options">
+					@foreach (var suit in Enum.GetValues<Suit>())
+					{
+						<button class="@SuitColor(suit)" @onclick="() => Game.SelectTrump(suit)" aria-label="Choose @suit" title="Choose @suit">@SuitSymbol(suit)</button>
+					}
+				</div>
+			</div>
+		}
+		else if (Game.Phase == GamePhase.Complete)
+		{
+			<div class="decision-panel result-panel">
+				<div class="decision-heading"><span>ROUND COMPLETE</span><strong>@Game.StatusMessage</strong></div>
+				<button class="primary-action" @onclick="Game.StartNewRound">Deal again</button>
+			</div>
+		}
+		else
+		{
+			<div class="hand-label"><span>YOUR HAND</span><small>@Game.Human.Hand.Count cards</small></div>
+			<div class="hand" aria-label="Your cards">
+				@foreach (var card in Game.Human.Hand)
+				{
+					<button class="playing-card @SuitColor(card)" disabled="@(!Game.CanPlay(card))" @onclick="() => Game.PlayHumanCard(card)" aria-label="Play @CardName(card)" title="Play @CardName(card)">
+						<span class="corner"><strong>@RankLabel(card)</strong><small>@SuitSymbol(card.Suit)</small></span>
+						<span class="suit-large">@SuitSymbol(card.Suit)</span>
+					</button>
+				}
+			</div>
+		}
+	</section>
+</main>
+
+@code {
+	protected override void OnInitialized() => Game.StartNewRound();
+
+	private static string RankLabel(Card card) => card.Rank switch
+	{
+		Rank.Ace => "A", Rank.King => "K", Rank.Queen => "Q", Rank.Jack => "J",
+		Rank.Ten => "10", Rank.Nine => "9", Rank.Eight => "8", Rank.Seven => "7", _ => "?"
+	};
+
+	private static string SuitSymbol(Suit suit) => suit switch
+	{
+		Suit.Clubs => "♣", Suit.Diamonds => "♦", Suit.Hearts => "♥", Suit.Spades => "♠", _ => "?"
+	};
+
+	private static string SuitColor(Card card) => SuitColor(card.Suit);
+	private static string SuitColor(Suit suit) => suit is Suit.Hearts or Suit.Diamonds ? "red-suit" : "black-suit";
+	private static string CardName(Card card) => $"{card.Rank} of {card.Suit}";
+}

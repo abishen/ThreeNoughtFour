@@ -1,6 +1,6 @@
-# 304 Console Card Game
+# Three Nought Four Card Game
 
-A playable C# console implementation of the four-player 304 card game. You play with Maya as your partner against the computer-controlled Banda and Ruban. The application includes bidding, hidden trump selection, legal-card validation, eight-trick rounds, bot decisions, contract scoring, automated simulations, and unit tests.
+A playable C# implementation of the four-player 304 card game with console and browser interfaces. You play with Maya as your partner against the computer-controlled Banda and Ruban. The application includes bidding, hidden trump selection, legal-card validation, eight-trick rounds, bot decisions, contract scoring, automated simulations, and unit tests.
 
 ## Prerequisites
 
@@ -56,6 +56,16 @@ dotnet run --project threenoughtfour/ThreeZeroFour.csproj
 ```
 
 Enter `p` or `pass` during the auction, or enter a legal bid. Choose trump with `C`, `D`, `H`, or `S`, then play cards by entering their displayed number.
+
+### Browser UI
+
+Start the interactive Blazor game:
+
+```sh
+dotnet run --project threenoughtfour.web/ThreeZeroFour.Web.csproj
+```
+
+Open the local address printed by .NET, usually `http://localhost:5000` or `https://localhost:5001`. Use the on-screen controls to bid, choose trump, and play highlighted legal cards. The layout supports desktop and mobile screens.
 
 ## Validation and Tests
 
