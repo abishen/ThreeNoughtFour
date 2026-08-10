@@ -1,6 +1,6 @@
 # 304 Console Card Game
 
-A playable C# console implementation of the four-player 304 card game. You play with Maya as your partner against the computer-controlled Nimal and Ravi. The application includes bidding, hidden trump selection, legal-card validation, eight-trick rounds, bot decisions, contract scoring, automated simulations, and unit tests.
+A playable C# console implementation of the four-player 304 card game. You play with Maya as your partner against the computer-controlled Banda and Ruban. The application includes bidding, hidden trump selection, legal-card validation, eight-trick rounds, bot decisions, contract scoring, automated simulations, and unit tests.
 
 ## Prerequisites
 
