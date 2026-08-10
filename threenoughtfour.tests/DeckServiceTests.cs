@@ -7,9 +7,9 @@ public sealed class DeckServiceTests
     [Fact]
     public void CreateShuffledDeck_WhenCalled_ReturnsCompleteUniqueDeck()
     {
-        var service = new DeckService(new Random(42));
+        DeckService service = new(new Random(42));
 
-        var deck = service.CreateShuffledDeck();
+        List<Card> deck = service.CreateShuffledDeck();
 
         Assert.Equal(32, deck.Count);
         Assert.Equal(32, deck.Distinct().Count());
@@ -19,9 +19,9 @@ public sealed class DeckServiceTests
     [Fact]
     public void DealCards_WhenFourCardsRequested_DealsFourCardsToEveryPlayer()
     {
-        var service = new DeckService(new Random(42));
-        var deck = service.CreateShuffledDeck();
-        var players = CreatePlayers();
+        DeckService service = new(new Random(42));
+        List<Card> deck = service.CreateShuffledDeck();
+        List<Player> players = CreatePlayers();
 
         service.DealCards(deck, players, 4);
 
@@ -33,8 +33,8 @@ public sealed class DeckServiceTests
     [Fact]
     public void SortPlayerHands_WhenCardsAreUnordered_SortsBySuitThenDescendingStrength()
     {
-        var service = new DeckService(new Random(42));
-        var player = new Player("Player", true, 0);
+        DeckService service = new(new Random(42));
+        Player player = new("Player", true, 0);
         player.Hand.AddRange(
         [
             new Card(Suit.Hearts, Rank.Seven),

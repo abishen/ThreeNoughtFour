@@ -6,12 +6,12 @@ static class RulesVerifier
 {
     public static void Run(IDeckService deckService, IGameRulesService rules)
     {
-        var deck = deckService.CreateShuffledDeck();
+        List<Card> deck = deckService.CreateShuffledDeck();
         Assert(deck.Count == 32, "Deck contains 32 cards");
         Assert(deck.Distinct().Count() == 32, "Every card is unique");
         Assert(deck.Sum(card => card.Points) == 304, "Card values total 304 points");
 
-        var hand = new List<Card>
+        List<Card> hand = new()
         {
             new(Suit.Clubs, Rank.Ace),
             new(Suit.Hearts, Rank.Jack)
@@ -20,7 +20,7 @@ static class RulesVerifier
             rules.GetLegalCards(hand, Suit.Clubs).SequenceEqual([new Card(Suit.Clubs, Rank.Ace)]),
             "A player must follow the lead suit");
 
-        var trick = new List<Card>
+        List<Card> trick = new()
         {
             new(Suit.Clubs, Rank.Jack),
             new(Suit.Clubs, Rank.Nine),

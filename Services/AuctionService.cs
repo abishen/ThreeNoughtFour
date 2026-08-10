@@ -8,11 +8,11 @@ sealed class AuctionService(
     {
         console.WriteLine("\nAuction (minimum 160; bids rise in steps of 10, or bid 304):");
         Player? bidder = null;
-        var highestBid = 150;
+        int highestBid = 150;
 
-        foreach (var player in players)
+        foreach (Player player in players)
         {
-            var bid = decisions.ChooseBid(player, highestBid);
+            int? bid = decisions.ChooseBid(player, highestBid);
             if (bid is null)
             {
                 console.WriteLine($"{player.Name} passes.");

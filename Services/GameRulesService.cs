@@ -9,7 +9,7 @@ sealed class GameRulesService : IGameRulesService
             return [.. hand];
         }
 
-        var followingSuit = hand.Where(card => card.Suit == leadSuit).ToList();
+        List<Card> followingSuit = hand.Where(card => card.Suit == leadSuit).ToList();
         return followingSuit.Count > 0 ? followingSuit : [.. hand];
     }
 
@@ -19,8 +19,8 @@ sealed class GameRulesService : IGameRulesService
         Suit trumpSuit,
         bool trumpRevealed)
     {
-        var winningIndex = 0;
-        for (var index = 1; index < playedCards.Count; index++)
+        int winningIndex = 0;
+        for (int index = 1; index < playedCards.Count; index++)
         {
             if (Beats(playedCards[index], playedCards[winningIndex], leadSuit, trumpSuit, trumpRevealed))
             {
@@ -38,8 +38,8 @@ sealed class GameRulesService : IGameRulesService
 
     private static bool Beats(Card challenger, Card current, Suit leadSuit, Suit trumpSuit, bool trumpRevealed)
     {
-        var challengerIsTrump = trumpRevealed && challenger.Suit == trumpSuit;
-        var currentIsTrump = trumpRevealed && current.Suit == trumpSuit;
+        bool challengerIsTrump = trumpRevealed && challenger.Suit == trumpSuit;
+        bool currentIsTrump = trumpRevealed && current.Suit == trumpSuit;
         if (challengerIsTrump != currentIsTrump)
         {
             return challengerIsTrump;

@@ -44,7 +44,7 @@ sealed class GameSession(
 
     public void StartNewRound()
     {
-        foreach (var player in Players)
+        foreach (Player player in Players)
         {
             player.Hand.Clear();
         }
@@ -71,7 +71,7 @@ sealed class GameSession(
         }
 
         Player? bidder = null;
-        var highestBid = 150;
+        int highestBid = 150;
 
         if (humanBid is not null && rules.IsValidBid(humanBid.Value, highestBid))
         {
@@ -79,9 +79,9 @@ sealed class GameSession(
             bidder = Human;
         }
 
-        foreach (var bot in Players.Skip(1))
+        foreach (Player bot in Players.Skip(1))
         {
-            var bid = botDecisions.ChooseBid(bot, highestBid);
+            int? bid = botDecisions.ChooseBid(bot, highestBid);
             if (bid is null)
             {
                 continue;
@@ -162,10 +162,10 @@ sealed class GameSession(
     {
         while (Phase == GamePhase.Playing && CurrentPlayer != Human)
         {
-            var bot = CurrentPlayer;
-            var legalCards = rules.GetLegalCards(bot.Hand, LeadSuit);
+            Player bot = CurrentPlayer;
+            IReadOnlyList<Card> legalCards = rules.GetLegalCards(bot.Hand, LeadSuit);
             RevealTrumpIfPlayerCannotFollow(bot, legalCards);
-            var card = botDecisions.ChooseCard(bot, legalCards, LeadSuit, TrumpSuit!.Value, TrumpRevealed);
+            Card card = botDecisions.ChooseCard(bot, legalCards, LeadSuit, TrumpSuit!.Value, TrumpRevealed);
             PlayCard(bot, card);
         }
 
@@ -179,7 +179,7 @@ sealed class GameSession(
 
     private void PlayCard(Player player, Card card)
     {
-        var legalCards = rules.GetLegalCards(player.Hand, LeadSuit);
+        IReadOnlyList<Card> legalCards = rules.GetLegalCards(player.Hand, LeadSuit);
         RevealTrumpIfPlayerCannotFollow(player, legalCards);
         player.Hand.Remove(card);
         CurrentTrick.Add(new CardPlay(player, card));
@@ -201,10 +201,10 @@ sealed class GameSession(
 
     private void ResolveTrick()
     {
-        var cards = CurrentTrick.Select(play => play.Card).ToList();
-        var winnerIndex = rules.FindWinningCardIndex(cards, LeadSuit!.Value, TrumpSuit!.Value, TrumpRevealed);
-        var winner = CurrentTrick[winnerIndex].Player;
-        var points = cards.Sum(card => card.Points);
+        List<Card> cards = CurrentTrick.Select(play => play.Card).ToList();
+        int winnerIndex = rules.FindWinningCardIndex(cards, LeadSuit!.Value, TrumpSuit!.Value, TrumpRevealed);
+        Player winner = CurrentTrick[winnerIndex].Player;
+        int points = cards.Sum(card => card.Points);
         TeamPoints[winner.Team] += points;
         _leaderSeat = winner.Seat;
         CurrentTrick.Clear();
@@ -212,9 +212,9 @@ sealed class GameSession(
         if (TrickNumber == 8)
         {
             Phase = GamePhase.Complete;
-            var contract = Contract!.Value;
-            var madeContract = TeamPoints[contract.Bidder.Team] >= contract.Bid;
-            var bidderTeam = contract.Bidder.IsHuman ? "Your team" : $"{contract.Bidder.Name}'s team";
+            Contract contract = Contract!.Value;
+            bool madeContract = TeamPoints[contract.Bidder.Team] >= contract.Bid;
+            string bidderTeam = contract.Bidder.IsHuman ? "Your team" : $"{contract.Bidder.Name}'s team";
             StatusMessage = $"{bidderTeam} {(madeContract ? "made" : "missed")} the {contract.Bid} contract.";
             return;
         }

@@ -17,7 +17,7 @@ class Program
             return;
         }
 
-        var simulation = args.Contains("--simulate", StringComparer.OrdinalIgnoreCase);
+        bool simulation = args.Contains("--simulate", StringComparer.OrdinalIgnoreCase);
         IPlayerDecisionService decisions = new PlayerDecisionService(console, rules);
         IAuctionService auctionService = new AuctionService(console, decisions);
         ITrickService trickService = new TrickService(console, rules, decisions);

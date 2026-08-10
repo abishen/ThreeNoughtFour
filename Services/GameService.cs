@@ -42,7 +42,7 @@ sealed class GameService(
 
         while (true)
         {
-            foreach (var player in _players)
+            foreach (Player player in _players)
             {
                 player.Hand.Clear();
             }
@@ -51,7 +51,7 @@ sealed class GameService(
             deckService.DealCards(deck, _players, 4);
             ShowFirstPlayerHand();
 
-            var auction = auctionService.Run(_players);
+            Contract? auction = auctionService.Run(_players);
             if (auction is not null)
             {
                 contract = auction.Value;
@@ -61,7 +61,7 @@ sealed class GameService(
             console.WriteLine("Everyone passed. Redealing...\n");
         }
 
-        var trumpSuit = decisions.ChooseTrump(contract.Bidder);
+        Suit trumpSuit = decisions.ChooseTrump(contract.Bidder);
         console.WriteLine(contract.Bidder.IsHuman
             ? $"You selected {trumpSuit} as hidden trump."
             : $"{contract.Bidder.Name} selected a hidden trump suit.");
@@ -70,8 +70,8 @@ sealed class GameService(
         deckService.SortPlayerHands(_players);
         ShowFirstPlayerHand();
 
-        var teamPoints = trickService.PlayTricks(_players, contract.Bidder, trumpSuit);
-        var madeContract = teamPoints[contract.Bidder.Team] >= contract.Bid;
+        int[] teamPoints = trickService.PlayTricks(_players, contract.Bidder, trumpSuit);
+        bool madeContract = teamPoints[contract.Bidder.Team] >= contract.Bid;
 
         console.WriteLine("\nRound result");
         console.WriteLine($"{_players[0].Name} and Maya: {teamPoints[0]} points");

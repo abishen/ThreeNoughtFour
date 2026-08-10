@@ -15,7 +15,7 @@ public sealed class GameRulesServiceTests
             new(Suit.Hearts, Rank.Jack)
         ];
 
-        var legalCards = _service.GetLegalCards(hand, leadSuit: null);
+        IReadOnlyList<Card> legalCards = _service.GetLegalCards(hand, leadSuit: null);
 
         Assert.Equal(hand, legalCards);
     }
@@ -30,7 +30,7 @@ public sealed class GameRulesServiceTests
             new(Suit.Hearts, Rank.Jack)
         ];
 
-        var legalCards = _service.GetLegalCards(hand, Suit.Clubs);
+        IReadOnlyList<Card> legalCards = _service.GetLegalCards(hand, Suit.Clubs);
 
         Assert.Equal(2, legalCards.Count);
         Assert.All(legalCards, card => Assert.Equal(Suit.Clubs, card.Suit));
@@ -45,7 +45,7 @@ public sealed class GameRulesServiceTests
             new(Suit.Hearts, Rank.Jack)
         ];
 
-        var legalCards = _service.GetLegalCards(hand, Suit.Spades);
+        IReadOnlyList<Card> legalCards = _service.GetLegalCards(hand, Suit.Spades);
 
         Assert.Equal(hand, legalCards);
     }
@@ -61,7 +61,7 @@ public sealed class GameRulesServiceTests
             new(Suit.Clubs, Rank.Ace)
         ];
 
-        var winningIndex = _service.FindWinningCardIndex(
+        int winningIndex = _service.FindWinningCardIndex(
             playedCards,
             Suit.Clubs,
             Suit.Hearts,
@@ -81,7 +81,7 @@ public sealed class GameRulesServiceTests
             new(Suit.Clubs, Rank.Nine)
         ];
 
-        var winningIndex = _service.FindWinningCardIndex(
+        int winningIndex = _service.FindWinningCardIndex(
             playedCards,
             Suit.Clubs,
             Suit.Hearts,
@@ -101,7 +101,7 @@ public sealed class GameRulesServiceTests
             new(Suit.Clubs, Rank.Ace)
         ];
 
-        var winningIndex = _service.FindWinningCardIndex(
+        int winningIndex = _service.FindWinningCardIndex(
             playedCards,
             Suit.Clubs,
             Suit.Hearts,
@@ -122,7 +122,7 @@ public sealed class GameRulesServiceTests
         int highestBid,
         bool expectedResult)
     {
-        var result = _service.IsValidBid(bid, highestBid);
+        bool result = _service.IsValidBid(bid, highestBid);
 
         Assert.Equal(expectedResult, result);
     }
@@ -136,7 +136,7 @@ public sealed class GameRulesServiceTests
         int highestBid,
         int expectedBid)
     {
-        var nextBid = _service.GetNextBid(highestBid);
+        int nextBid = _service.GetNextBid(highestBid);
 
         Assert.Equal(expectedBid, nextBid);
     }

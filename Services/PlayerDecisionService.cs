@@ -20,7 +20,7 @@ sealed class PlayerDecisionService(
         while (true)
         {
             console.Write("Choose hidden trump (C/D/H/S): ");
-            var suit = console.ReadLine()?.Trim().ToUpperInvariant() switch
+            Suit? suit = console.ReadLine()?.Trim().ToUpperInvariant() switch
             {
                 "C" => Suit.Clubs,
                 "D" => Suit.Diamonds,
@@ -51,14 +51,14 @@ sealed class PlayerDecisionService(
         while (true)
         {
             console.Write($"Your bid (pass, {rules.GetNextBid(highestBid)}-300, or 304): ");
-            var input = console.ReadLine()?.Trim();
+            string? input = console.ReadLine()?.Trim();
             if (string.Equals(input, "pass", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(input, "p", StringComparison.OrdinalIgnoreCase))
             {
                 return null;
             }
 
-            if (int.TryParse(input, out var bid) && rules.IsValidBid(bid, highestBid))
+            if (int.TryParse(input, out int bid) && rules.IsValidBid(bid, highestBid))
             {
                 return bid;
             }
@@ -69,12 +69,12 @@ sealed class PlayerDecisionService(
 
     private int? ChooseBotBid(Player player, int highestBid)
     {
-        var strongestSuit = player.Hand
+        int strongestSuit = player.Hand
             .GroupBy(card => card.Suit)
             .Max(group => group.Sum(card => card.Points) + group.Count() * 8);
-        var estimate = player.Hand.Sum(card => card.Points) * 2 + strongestSuit;
-        var maximumBid = Math.Min(250, estimate / 10 * 10);
-        var nextBid = rules.GetNextBid(highestBid);
+        int estimate = player.Hand.Sum(card => card.Points) * 2 + strongestSuit;
+        int maximumBid = Math.Min(250, estimate / 10 * 10);
+        int nextBid = rules.GetNextBid(highestBid);
         return nextBid <= maximumBid ? nextBid : null;
     }
 
@@ -89,9 +89,9 @@ sealed class PlayerDecisionService(
             }
 
             console.Write("Choose a card number: ");
-            if (int.TryParse(console.ReadLine(), out var choice) && choice >= 1 && choice <= player.Hand.Count)
+            if (int.TryParse(console.ReadLine(), out int choice) && choice >= 1 && choice <= player.Hand.Count)
             {
-                var card = player.Hand[choice - 1];
+                Card card = player.Hand[choice - 1];
                 if (legalCards.Contains(card))
                 {
                     return card;
