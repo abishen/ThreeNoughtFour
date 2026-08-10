@@ -11,15 +11,15 @@ sealed class GameService(
     private readonly List<Player> _players =
     [
         new(simulation ? "Anu" : "You", !simulation, 0),
-        new("Nimal", false, 1),
+        new("Banda", false, 1),
         new("Maya", false, 2),
-        new("Ravi", false, 3)
+        new("Ruban", false, 3)
     ];
 
     public void Run()
     {
         console.WriteLine("304 - Console Card Game");
-        console.WriteLine($"{_players[0].Name} and Maya play against Nimal and Ravi. Card notation: AS = Ace of Spades.");
+        console.WriteLine($"{_players[0].Name} and Maya play against Banda and Ruban . Card notation: AS = Ace of Spades.");
 
         if (simulation)
         {
@@ -75,7 +75,7 @@ sealed class GameService(
 
         console.WriteLine("\nRound result");
         console.WriteLine($"{_players[0].Name} and Maya: {teamPoints[0]} points");
-        console.WriteLine($"Nimal and Ravi: {teamPoints[1]} points");
+        console.WriteLine($"Banda and Ruban: {teamPoints[1]} points");
         console.WriteLine($"{contract.Bidder.Name}'s team {(madeContract ? "made" : "failed")} the {contract.Bid} contract.");
     }
 
