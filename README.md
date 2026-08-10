@@ -40,19 +40,19 @@ The reported version should begin with `10.`.
 
 ## Run the Application
 
-Open a terminal in the repository root, the directory containing `threenoughtfour` and `threenoughtfour.tests`.
+Open a terminal in the repository root, the directory containing `ThreeZeroFour.csproj`, `threenoughtfour.web`, and `threenoughtfour.tests`.
 
 Restore dependencies and build the application:
 
 ```sh
-dotnet restore threenoughtfour/ThreeZeroFour.csproj
-dotnet build threenoughtfour/ThreeZeroFour.csproj
+dotnet restore ThreeZeroFour.csproj
+dotnet build ThreeZeroFour.csproj
 ```
 
 Start an interactive game:
 
 ```sh
-dotnet run --project threenoughtfour/ThreeZeroFour.csproj
+dotnet run --project ThreeZeroFour.csproj
 ```
 
 Enter `p` or `pass` during the auction, or enter a legal bid. Choose trump with `C`, `D`, `H`, or `S`, then play cards by entering their displayed number.
@@ -65,20 +65,20 @@ Start the interactive Blazor game:
 dotnet run --project threenoughtfour.web/ThreeZeroFour.Web.csproj
 ```
 
-Open the local address printed by .NET, usually `http://localhost:5000` or `https://localhost:5001`. Use the on-screen controls to bid, choose trump, and play highlighted legal cards. The layout supports desktop and mobile screens.
+Open the local address printed by .NET, usually `http://localhost:5000` or `https://localhost:5001`. Use the on-screen controls to bid, choose trump, and play highlighted legal cards. The responsive layout includes iOS safe-area support, Android-friendly touch targets, and a swipeable card hand on narrow screens.
 
 ## Validation and Tests
 
 Run an automated game with four computer-controlled players:
 
 ```sh
-dotnet run --project threenoughtfour/ThreeZeroFour.csproj -- --simulate
+dotnet run --project ThreeZeroFour.csproj -- --simulate
 ```
 
 Run the built-in rules checks:
 
 ```sh
-dotnet run --project threenoughtfour/ThreeZeroFour.csproj -- --self-test
+dotnet run --project ThreeZeroFour.csproj -- --self-test
 ```
 
 Run the xUnit test suite:
